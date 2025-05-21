@@ -1,0 +1,11 @@
+{
+  "json.schemas": [],
+  "json.validate.enable": false,
+  // "files.exclude": {
+  //   "**/start-dev.ts": true,
+  //   "**/start-dev2.ts": true
+  // }
+}
+
+
+

@@ -1,0 +1,58 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = "postgresql://postgres:melvin123@localhost:5432/parking_system"
+}
+
+enum Role {
+  ADMIN
+  PARKING_ATTENDANT
+}
+
+model User {
+  id               String   @id @default(uuid())
+  email            String   @unique
+  password         String
+  firstName        String
+  lastName         String
+  role             Role     @default(PARKING_ATTENDANT)
+  resetToken       String?
+  resetTokenExpiry DateTime?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+}
+
+model Parking {
+  id                 String   @id @default(uuid())
+  code               String   @unique
+  name               String
+  numberOfSpaces     Int
+  availableSpaces    Int
+  location           String
+  chargingFeePerHour Float
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+  parkingRecords     CarParkingRecord[]
+}
+
+model CarParkingRecord {
+  id              String    @id @default(uuid())
+  plateNumber     String
+  parkingCode     String
+  entryTime       DateTime  @default(now())
+  exitTime        DateTime?
+  chargedAmount   Float?
+  parking         Parking   @relation(fields: [parkingCode], references: [code])
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  @@index([parkingCode])
+  @@index([plateNumber])
+}
+
+
+
+
