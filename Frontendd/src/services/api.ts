@@ -8,13 +8,13 @@ import {
   ReportQuery,
   ParkingUtilization,
   ParkingStatistics,
-  ParkingUtilizationReport 
+  ParkingUtilizationReport,
+  LogEntry 
 } from "@/types/parking";
-import { mockReportResponses } from './mockData';
 
 // Create an axios instance with default config
 const api = axios.create({
-  baseURL: "/api/v1",
+  baseURL: import.meta.env.VITE_API_URL || "/api/v1",
   headers: {
     'Content-Type': 'application/json',
   },
@@ -146,38 +146,35 @@ export const carApi = {
 // Reports APIs
 export const reportApi = {
   getEntryReport: async (query: ReportQuery) => {
-    try {
-      const response = await api.get('/reports/entered', { params: query });
-      return response;
-    } catch (error) {
-      console.warn('Using mock data for entry report');
-      return {
-        data: mockReportResponses.getEntryReport(query.from, query.to)
-      };
-    }
+    const response = await api.get('/reports/entered', { params: query });
+    return response;
   },
   
   getExitReport: async (query: ReportQuery) => {
-    try {
-      const response = await api.get('/reports/outgoing', { params: query });
-      return response;
-    } catch (error) {
-      console.warn('Using mock data for exit report');
-      return {
-        data: mockReportResponses.getExitReport(query.from, query.to)
-      };
-    }
+    const response = await api.get('/reports/outgoing', { params: query });
+    return response;
   },
   
   getUtilizationReport: async (query: ReportQuery) => {
-    try {
-      const response = await api.get('/reports/utilization', { params: query });
-      return response;
-    } catch (error) {
-      console.warn('Using mock data for utilization report');
-      return {
-        data: mockReportResponses.getUtilizationReport()
-      };
-    }
+    const response = await api.get('/reports/utilization', { params: query });
+    return response;
+  }
+};
+
+// Logs API
+export const logsApi = {
+  getLogs: async (params: { 
+    page?: number; 
+    limit?: number; 
+    level?: string; 
+    search?: string;
+  }): Promise<{ 
+    data: LogEntry[]; 
+    total: number; 
+    page: number; 
+    limit: number;
+  }> => {
+    const response = await api.get('/logs', { params });
+    return response.data;
   }
 };

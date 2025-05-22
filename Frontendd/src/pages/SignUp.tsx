@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
@@ -33,10 +32,11 @@ const SignUp: React.FC = () => {
   const form = useForm<z.infer<typeof signUpSchema>>({
     resolver: zodResolver(signUpSchema),
     defaultValues: {
-      firstName: '',
-      lastName: '',
-      email: '',
-      password: '',
+      email: "",
+      password: "",
+      firstName: "",
+      lastName: "",
+      role: "USER" as const, // Default to USER role, can be changed by admin
     },
   });
 
@@ -48,7 +48,7 @@ const SignUp: React.FC = () => {
         lastName: data.lastName,
         email: data.email,
         password: data.password,
-        role: "parking_attendant", // Default role is now hardcoded
+        role: data.role,
       };
       
       await signUp(signUpData);
@@ -108,7 +108,7 @@ const SignUp: React.FC = () => {
               <FormItem>
                 <FormLabel>Email</FormLabel>
                 <FormControl>
-                  <Input type="email" placeholder="john.doe@example.com" {...field} />
+                  <Input type="email" placeholder="Enter your email address" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
